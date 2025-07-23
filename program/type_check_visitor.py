@@ -3,7 +3,16 @@ from SimpleLangVisitor import SimpleLangVisitor
 from custom_types import IntType, FloatType, StringType, BoolType
 
 class TypeCheckVisitor(SimpleLangVisitor):
-
+  
+  def visitMod(self, ctx: SimpleLangParser.ModContext):
+    left_type = self.visit(ctx.expr(0))
+    right_type = self.visit(ctx.expr(1))
+    
+    if isinstance(left_type, (IntType)) and isinstance(right_type, (IntType)):
+        return IntType()
+    else:
+        raise TypeError("Unsupported operand types for %: {} and {}".format(left_type, right_type))
+  
   def visitMulDiv(self, ctx: SimpleLangParser.MulDivContext):
     left_type = self.visit(ctx.expr(0))
     right_type = self.visit(ctx.expr(1))
