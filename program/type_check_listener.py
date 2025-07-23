@@ -9,23 +9,23 @@ class TypeCheckListener(SimpleLangListener):
     self.types = {}
 
   # Mod '%'
-  def enterMod(self, ctx: SimpleLangListener.ModContext):
+  def enterMod(self, ctx: SimpleLangParser.ModContext):
     pass
-  def exitMod(self, ctx: SimpleLangListener.ModContext):
+  def exitMod(self, ctx: SimpleLangParser.ModContext):
     left_type = self.types[ctx.expr(0)]
     right_type = self.types[ctx.expr(1)]
     if not (isinstance(left_type, IntType) and isinstance(right_type, IntType)):
-      self.errors.append(f"Unsupported operand types for %: {left_type} and {right_type}")
+      self.errors.append(f"Listener - Unsupported operand types for %: {left_type} and {right_type}")
     self.types[ctx] = IntType()
   
   # Exp '^'
-  def enterExp(self, ctx: SimpleLangListener.ExpContext):
+  def enterExp(self, ctx: SimpleLangParser.ExpContext):
     pass
-  def exitExp(self, ctx: SimpleLangListener.ExpContext):
+  def exitExp(self, ctx: SimpleLangParser.ExpContext):
     left_type = self.types[ctx.expr(0)]
     right_type = self.types[ctx.expr(1)]
     if not (isinstance(left_type, (IntType, FloatType)) and isinstance(right_type, (IntType, FloatType))):
-      self.errors.append(f"Unsupported operand types for ^: {left_type} and {right_type}")
+      self.errors.append(f"Listener - Unsupported operand types for ^: {left_type} and {right_type}")
     self.types[ctx] = FloatType()
   
   # Mul '*'
@@ -44,7 +44,7 @@ class TypeCheckListener(SimpleLangListener):
         if self.is_valid_str_operation(left_type, right_type):
           self.types[ctx] = StringType() 
         else: 
-          self.errors.append(f"Unsupported operand types for *: {left_type} and {right_type}")
+          self.errors.append(f"Listener - Unsupported operand types for *: {left_type} and {right_type}")
 
   # Div '\'
   def enterDiv(self, ctx: SimpleLangParser.DivContext):
@@ -53,7 +53,7 @@ class TypeCheckListener(SimpleLangListener):
     left_type = self.types[ctx.expr(0)]
     right_type = self.types[ctx.expr(1)]
     if not self.is_valid_arithmetic_operation(left_type, right_type):
-      self.errors.append(f"Unsupported operand types for /: {left_type} and {right_type}")
+      self.errors.append(f"Listener - Unsupported operand types for /: {left_type} and {right_type}")
     self.types[ctx] = FloatType() if isinstance(left_type, FloatType) or isinstance(right_type, FloatType) else IntType()
 
   # Add '+'
@@ -69,7 +69,7 @@ class TypeCheckListener(SimpleLangListener):
       if self.is_valid_bool_operation(left_type, right_type):
         self.types[ctx] = BoolType()
       else: 
-        self.errors.append(f"Unsupported operand types for +: {left_type} and {right_type}")
+        self.errors.append(f"Listener - Unsupported operand types for +: {left_type} and {right_type}")
 
   # Sub '-'
   def enterSub(self, ctx: SimpleLangParser.SubContext):

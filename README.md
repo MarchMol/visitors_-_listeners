@@ -127,6 +127,65 @@ Para los conflictos de tipos que se deben agregar, se me ocurrieron las siguient
 - Visitor
 Primero, fue necesario separar la funcion que manejaba a la multiplicacion y division para agregar esta funcionalidad especial, por tanto ahora Mul y Div ahora seran producciones separadas y tendran funciones separadas, igual que Add y Sub. 
 
+```
+  def visitMul(self, ctx: SimpleLangParser.MulContext):
+    left_type = self.visit(ctx.expr(0))
+    right_type = self.visit(ctx.expr(1))
+    
+    if isinstance(left_type, (IntType, FloatType)) and isinstance(right_type, (IntType, FloatType)):
+        return FloatType() if isinstance(left_type, FloatType) or isinstance(right_type, FloatType) else IntType()
+    else:
+      if isinstance(left_type, StringType) and isinstance(right_type, IntType):
+        return StringType()
+      else:
+        if isinstance(left_type, BoolType) and isinstance(right_type, BoolType):
+          return BoolType()
+        raise TypeError("Unsupported operand types for *: {} and {}".format(left_type, right_type))
+
+  def visitAdd(self, ctx: SimpleLangParser.AddContext):
+    left_type = self.visit(ctx.expr(0))
+    right_type = self.visit(ctx.expr(1))
+    if isinstance(left_type, (IntType, FloatType)) and isinstance(right_type, (IntType, FloatType)):
+        return FloatType() if isinstance(left_type, FloatType) or isinstance(right_type, FloatType) else IntType()
+    else:
+      if isinstance(left_type, BoolType) and isinstance(right_type, BoolType):
+        return BoolType()
+      else:
+        raise TypeError("Unsupported operand types for +: {} and {}".format(left_type, right_type))
+```
 
 - Listener
+```
+  # Mul '*'
+  def enterMul(self, ctx: SimpleLangParser.MulContext):
+    pass
+  def exitMul(self, ctx: SimpleLangParser.MulContext):
+    left_type = self.types[ctx.expr(0)]
+    right_type = self.types[ctx.expr(1)]
+    
+    if self.is_valid_arithmetic_operation(left_type, right_type):
+      self.types[ctx] = FloatType() if isinstance(left_type, FloatType) or isinstance(right_type, FloatType) else IntType()
+    else: 
+      if self.is_valid_bool_operation(left_type, right_type):
+        self.types[ctx] = BoolType() 
+      else:
+        if self.is_valid_str_operation(left_type, right_type):
+          self.types[ctx] = StringType() 
+        else: 
+          self.errors.append(f"Unsupported operand types for *: {left_type} and {right_type}")
 
+  # Add '+'
+  def enterAdd(self, ctx: SimpleLangParser.AddContext):
+    pass
+  def exitAdd(self, ctx: SimpleLangParser.AddContext):
+    left_type = self.types[ctx.expr(0)]
+    right_type = self.types[ctx.expr(1)]
+    
+    if self.is_valid_arithmetic_operation(left_type, right_type):
+      self.types[ctx] = FloatType() if isinstance(left_type, FloatType) or isinstance(right_type, FloatType) else IntType()
+    else:
+      if self.is_valid_bool_operation(left_type, right_type):
+        self.types[ctx] = BoolType()
+      else: 
+        self.errors.append(f"Unsupported operand types for +: {left_type} and {right_type}")
+```

@@ -26,12 +26,39 @@ class SimpleLangListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by SimpleLangParser#Div.
+    def enterDiv(self, ctx:SimpleLangParser.DivContext):
+        pass
+
+    # Exit a parse tree produced by SimpleLangParser#Div.
+    def exitDiv(self, ctx:SimpleLangParser.DivContext):
+        pass
+
+
+    # Enter a parse tree produced by SimpleLangParser#Add.
+    def enterAdd(self, ctx:SimpleLangParser.AddContext):
+        pass
+
+    # Exit a parse tree produced by SimpleLangParser#Add.
+    def exitAdd(self, ctx:SimpleLangParser.AddContext):
+        pass
+
+
     # Enter a parse tree produced by SimpleLangParser#Float.
     def enterFloat(self, ctx:SimpleLangParser.FloatContext):
         pass
 
     # Exit a parse tree produced by SimpleLangParser#Float.
     def exitFloat(self, ctx:SimpleLangParser.FloatContext):
+        pass
+
+
+    # Enter a parse tree produced by SimpleLangParser#Sub.
+    def enterSub(self, ctx:SimpleLangParser.SubContext):
+        pass
+
+    # Exit a parse tree produced by SimpleLangParser#Sub.
+    def exitSub(self, ctx:SimpleLangParser.SubContext):
         pass
 
 
@@ -53,21 +80,12 @@ class SimpleLangListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by SimpleLangParser#MulDiv.
-    def enterMulDiv(self, ctx:SimpleLangParser.MulDivContext):
+    # Enter a parse tree produced by SimpleLangParser#Mul.
+    def enterMul(self, ctx:SimpleLangParser.MulContext):
         pass
 
-    # Exit a parse tree produced by SimpleLangParser#MulDiv.
-    def exitMulDiv(self, ctx:SimpleLangParser.MulDivContext):
-        pass
-
-
-    # Enter a parse tree produced by SimpleLangParser#AddSub.
-    def enterAddSub(self, ctx:SimpleLangParser.AddSubContext):
-        pass
-
-    # Exit a parse tree produced by SimpleLangParser#AddSub.
-    def exitAddSub(self, ctx:SimpleLangParser.AddSubContext):
+    # Exit a parse tree produced by SimpleLangParser#Mul.
+    def exitMul(self, ctx:SimpleLangParser.MulContext):
         pass
 
 
