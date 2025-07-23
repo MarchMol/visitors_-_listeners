@@ -40,6 +40,23 @@ Para tipos unitarios (es decir, no operandos) la revision es individual y solo s
     return IntType()
 ```
 ### Listener
+La verificacion de tipos con listeners es distinta a visitors, pues no se cuenta con control sobre la navegacion del arbol. Esto trae el beneficio que este metodo es pasivo y requiere menor computo, pero es necesario mantener una constancia de los tipos traversados, lo que trae myor uso de memoria.
+
+Para implementar un Type Cheker con listeners, es necesario describir una funcion para la entrada a un nodo y una para la salida. Estas funciones no tienen tipo de retorno, sino que solo almacenamos la informacion de tipos en el contexto. En la entrada de un nodo operacion no es necesario hacer nada, pues en este importa mas la salida, pues en este punto ya con la informacion de los hijos podemos verificar los tipos. Podemos ver que en la funcion de salida de una operacion evaluamos una condicion y podemos agregar el tipo correcto dado nuestro contexto, y si se falla podemos agregar el error a los logs
+```
+// Entrada
+  def enterOperation(self, ctx: SimpleLangParser.OperationContext):
+    pass
+
+// Salida
+  def exitOperation(self, ctx: SimpleLangParser.OperationContext):
+    left_type = self.types[ctx.expr(0)]
+    right_type = self.types[ctx.expr(1)]
+    if condition(left_type, right_type):
+      self.types[ctx] = CorrectType()
+    else:
+      self.errors.append(f"Unsupported operand types for operation: {left_type} and {right_type}")
+```
 
 ## 2. Operaciones adicionales
 Se decidio agregar las operaciones de Modulo y Exponencial ya que serian sencillas de implementar a las demas operaciones matematica ya establecidas.
@@ -74,7 +91,42 @@ Para exponencial se realizo lo siguiente, donde los argumentos a ambos lados, re
     else:
         raise TypeError("Unsupported operand types for ^: {} and {}".format(left_type, right_type))
 ```
+- Listener
+Para el listener se evalua la misma idea lo cual se ve a continuacion.
+
+```
+  # Mod '%'
+  def enterMod(self, ctx: SimpleLangListener.ModContext):
+    pass
+  def exitMod(self, ctx: SimpleLangListener.ModContext):
+    left_type = self.types[ctx.expr(0)]
+    right_type = self.types[ctx.expr(1)]
+    if not (isinstance(left_type, IntType) and isinstance(right_type, IntType)):
+      self.errors.append(f"Unsupported operand types for %: {left_type} and {right_type}")
+    self.types[ctx] = IntType()
+  
+  # Exp '^'
+  def enterExp(self, ctx: SimpleLangListener.ExpContext):
+    pass
+  def exitExp(self, ctx: SimpleLangListener.ExpContext):
+    left_type = self.types[ctx.expr(0)]
+    right_type = self.types[ctx.expr(1)]
+    if not (isinstance(left_type, (IntType, FloatType)) and isinstance(right_type, (IntType, FloatType))):
+      self.errors.append(f"Unsupported operand types for ^: {left_type} and {right_type}")
+    self.types[ctx] = FloatType()
+```
 
 ## 3. Conflictos de Tipos
-asdasd
+
+Para los conflictos de tipos que se deben agregar, se me ocurrieron las siguientes ideas para implementar
+1. ACEPTAR str * int, que deberia de devolver una repeticion de la cadena por la cantidad establecia, es decir, un tipo String.
+2. ACEPTAR suma booleana, que seria el equivalente a un OR
+3. ACEPTAR multiplicacion booleana, que seria el equivalente a un AND
+
+
+- Visitor
+Primero, fue necesario separar la funcion que manejaba a la multiplicacion y division para agregar esta funcionalidad especial, por tanto ahora Mul y Div ahora seran producciones separadas y tendran funciones separadas, igual que Add y Sub. 
+
+
+- Listener
 

@@ -4,8 +4,10 @@ prog: stat+ ;
 
 stat: expr NEWLINE ;
 
-expr: expr op=('*'|'/') expr       # MulDiv
-    | expr op=('+'|'-') expr       # AddSub
+expr: expr op='*' expr             # Mul
+    | expr op='/' expr             # Div
+    | expr op='+' expr             # Add
+    | expr op='-' expr             # Sub
     | expr op='%' expr             # Mod
     | expr op='^' expr             # Exp
     | INT                          # Int
