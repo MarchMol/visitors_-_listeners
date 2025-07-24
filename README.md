@@ -1,6 +1,6 @@
 # Construccion de Compiladores - <br>Laboratorio 2 - Sistema de tipos con ANTLR
 
-## <a href="youtube.com">Video de prueba</a>
+## <a href="https://youtu.be/QZFDAj6YJVE">Video de prueba</a>
 
 ## 1. Funcionamiento
 La verificacion de tipos en ANTLR comienza por la defincion de operaciones en el g4, en este caso, en la produccion expr. Con la parte de op=regex podemos diferenciar los diferentes tipos de operaciones y con el # podemos indicar el nombre que le assignamos. Asimismo, esto puede servir para la definicion de tipos como se ven en las producciones a simbolos terminales.
@@ -155,6 +155,7 @@ Primero, fue necesario separar la funcion que manejaba a la multiplicacion y div
 ```
 
 - Listener
+En listener implementa la misma logica, solo que en lugar de utilizar un valor de retorno como el calculo final, solo cambia los registros del recorrido con el contexto.
 ```
   # Mul '*'
   def enterMul(self, ctx: SimpleLangParser.MulContext):
